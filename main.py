@@ -98,7 +98,8 @@ def main():
     text_scroll = Scrollbar(my_frame)
     text_scroll.pack(side=RIGHT, fill=Y)
 
-    text_box = Text(my_frame, height=50, font=(FONT, 16), wrap=WORD, undo=True, yscrollcommand=text_scroll.set, pady=10, padx=10)
+    text_box = Text(my_frame, height=50, font=(FONT, 16), wrap=WORD, undo=True, 
+                    yscrollcommand=text_scroll.set, pady=10, padx=10)
     text_box.pack()
 
     text_scroll.config(command=text_box.yview)
@@ -116,9 +117,11 @@ def main():
                            command=lambda: save_file(text_box, status_bar))
     saveas_button.pack(side=LEFT, padx=10, pady=10)
 
-    next_button = Button(toolbar, relief=RAISED, compound=LEFT, text="-->", command=lambda: next_page(text_box, status_bar))
+    next_button = Button(toolbar, relief=RAISED, compound=LEFT, text="-->", 
+                         command=lambda: next_page(text_box, status_bar))
     next_button.pack(side=RIGHT, padx=10, pady=10)
-    back_button = Button(toolbar, relief=RAISED, compound=LEFT, text="<--", command=lambda: back_page(text_box, status_bar))
+    back_button = Button(toolbar, relief=RAISED, compound=LEFT, text="<--", 
+                         command=lambda: back_page(text_box, status_bar))
     back_button.pack(side=RIGHT, padx=10, pady=10)
 
     text_box.bind("<KeyRelease>", lambda x: status_bar.config(text=current_name or "New File"))
@@ -131,5 +134,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
