@@ -5,11 +5,13 @@ from datetime import date, datetime
 
 # Configuration Variables
 HEIGHT, WIDTH = 700, 600
-FONT = "HP Simplified Hans Light"
-
-DATE = date.today().strftime("%d-%m-%Y")
+FONT = ("HP Simplified Hans Light", 16)
+STATUS_FONT = ("HP Simplified Hans", 16)
+DATE_FORMAT = "%d-%m-%Y"
+# Constants
+DATE = date.today().strftime(DATE_FORMAT)
 PAGE_DIRECTORY = f"{getcwd()}\\pages\\".replace("\\", "/")
-
+# Globals
 current_page = ""
 current_name = ""
 # load all text files into memory then next/back will just change the index
@@ -49,7 +51,7 @@ def open_file(text, status, text_file=None):
         current_page = text_file
         name = file_name(text_file)
         try:
-            current_name = datetime.strptime(name, "%d-%m-%Y").strftime("%A, %B %d, %Y")
+            current_name = datetime.strptime(name, DATE_FORMAT).strftime("%A, %B %d, %Y")
         except ValueError:
             current_name = name
         status.config(text=current_name)
@@ -76,7 +78,7 @@ def save_file(text, status, text_file=None):
         current_page = text_file
         name = file_name(text_file)
         try:
-            current_name = datetime.strptime(name, "%d-%m-%Y").strftime("%A, %B %d, %Y")
+            current_name = datetime.strptime(name, DATE_FORMAT).strftime("%A, %B %d, %Y")
         except ValueError:
             current_name = name
         status.config(text=f"{current_name} (Saved)")
@@ -91,16 +93,21 @@ def save_file(text, status, text_file=None):
 
 def delete_file(text, status):
     global temp_index
-    # Temporarily store index of page so back/next page go from that position
-    current_index = pages.index(current_page) - 1
-    # Removes page from memory
-    pages.remove(current_page)
-    # Removes the actual file
-    remove(current_page)
-    # Clears the textbox
-    new_file(text, status)
-    temp_index = current_index
-    status.config(text=f"Page Deleted")
+    # Check if page is actually saved first
+    if current_page:
+        # Temporarily store index of page so back/next page go from that position
+        current_index = pages.index(current_page) - 1
+        # Removes page from memory
+        pages.remove(current_page)
+        # Removes the actual file
+        remove(current_page)
+        # Clears the textbox
+        new_file(text, status)
+        temp_index = current_index
+        status.config(text=f"Page Deleted")
+    else:
+        new_file(text, status)
+        status.config(text=f"Page Deleted")
 
 
 # These loop through pages, and can loop back once reaching the end due to modulus
@@ -139,13 +146,13 @@ def main():
     my_frame = Frame(root)
     my_frame.pack()
 
-    status_bar = Label(my_frame, text="New File", font=("HP Simplified Hans", 16))
+    status_bar = Label(my_frame, text="New File", font=STATUS_FONT)
     status_bar.pack(fill=X, ipady=5)
 
     text_scroll = Scrollbar(my_frame)
     text_scroll.pack(side=RIGHT, fill=Y)
 
-    text_box = Text(my_frame, height=50, font=(FONT, 16), wrap=WORD, undo=True, yscrollcommand=text_scroll.set, pady=10,
+    text_box = Text(my_frame, height=50, font=FONT, wrap=WORD, undo=True, yscrollcommand=text_scroll.set, pady=10,
                     padx=10)
     text_box.pack()
 
@@ -181,6 +188,10 @@ def main():
     root.bind("<Home>", lambda x: back_page(text_box, status_bar))
 
     root.resizable(False, False)
+
+    if pages:
+        open_file(text_box, status_bar, pages[-1])
+
     root.mainloop()
 
 
