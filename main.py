@@ -6,8 +6,8 @@ from datetime import date, datetime
 # Configuration Variables
 HEIGHT, WIDTH = 700, 600
 FONT = "HP Simplified Hans Light"
-DATE = date.today().strftime("%d-%m-%Y")
 
+DATE = date.today().strftime("%d-%m-%Y")
 PAGE_DIRECTORY = f"{getcwd()}\\pages\\".replace("\\", "/")
 
 current_page = ""
