@@ -1,4 +1,3 @@
-import datetime
 from tkinter import *
 from tkinter import filedialog
 from os import listdir, getcwd, remove
@@ -15,6 +14,7 @@ current_page = ""
 current_name = ""
 # load all text files into memory then next/back will just change the index
 pages = [PAGE_DIRECTORY + page for page in listdir("pages")]
+temp_index = 0
 
 
 # Gets the file name out of a path, e.g. C:/.../foo.txt will return foo
@@ -26,8 +26,9 @@ def file_name(path):
 def new_file(text, status):
     global current_page
     global current_name
+    global temp_index
 
-    current_page, current_name = "", ""
+    current_page, current_name, temp_index = "", "", 0
     text.delete("1.0", END)
     status.config(text="New File")
 
@@ -89,26 +90,40 @@ def save_file(text, status, text_file=None):
 
 
 def delete_file(text, status):
+    global temp_index
+    # Temporarily store index of page so back/next page go from that position
+    current_index = pages.index(current_page) - 1
     # Removes page from memory
     pages.remove(current_page)
     # Removes the actual file
     remove(current_page)
     # Clears the textbox
     new_file(text, status)
+    temp_index = current_index
     status.config(text=f"Page Deleted")
 
 
 # These loop through pages, and can loop back once reaching the end due to modulus
 def next_page(text, status):
+    global temp_index
+
     if current_page:
         open_file(text, status, pages[(pages.index(current_page) + 1) % len(pages)])
+    elif temp_index:
+        open_file(text, status, pages[(temp_index + 1) % len(pages)])
+        temp_index = 0
     else:
         open_file(text, status, pages[-1])
 
 
 def back_page(text, status):
+    global temp_index
+
     if current_page:
         open_file(text, status, pages[(pages.index(current_page) - 1) % len(pages)])
+    elif temp_index:
+        open_file(text, status, pages[temp_index])
+        temp_index = 0
     else:
         open_file(text, status, pages[0])
 
