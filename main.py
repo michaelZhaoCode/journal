@@ -7,7 +7,7 @@ from datetime import date, datetime
 HEIGHT, WIDTH = 700, 600
 FONT = ("HP Simplified Hans Light", 16)
 STATUS_FONT = ("HP Simplified Hans", 16)
-DATE_FORMAT = "%d-%m-%Y"
+DATE_FORMAT = "%Y-%m-%d"
 # Constants
 DATE = date.today().strftime(DATE_FORMAT)
 PAGE_DIRECTORY = f"{getcwd()}\\pages\\".replace("\\", "/")
@@ -15,7 +15,7 @@ PAGE_DIRECTORY = f"{getcwd()}\\pages\\".replace("\\", "/")
 current_page = ""
 current_name = ""
 # load all text files into memory then next/back will just change the index
-pages = [PAGE_DIRECTORY + page for page in listdir("pages")]
+pages = [PAGE_DIRECTORY + page for page in listdir("pages") if ".txt" in page]
 temp_index = 0
 
 
