@@ -7,9 +7,10 @@ from datetime import date, datetime
 HEIGHT, WIDTH = 700, 600
 FONT = ("HP Simplified Hans Light", 16)
 STATUS_FONT = ("HP Simplified Hans", 16)
-DATE_FORMAT = "%Y-%m-%d"
+FILE_DATE_FORMAT = "%Y-%m-%d"
+DISPLAY_DATE_FORMAT = "%A, %B %d, %Y"
 # Constants
-DATE = date.today().strftime(DATE_FORMAT)
+DATE = date.today().strftime(FILE_DATE_FORMAT)
 PAGE_DIRECTORY = f"{getcwd()}\\pages\\".replace("\\", "/")
 # Globals
 current_page = ""
@@ -51,7 +52,7 @@ def open_file(text, status, text_file=None):
         current_page = text_file
         name = file_name(text_file)
         try:
-            current_name = datetime.strptime(name, DATE_FORMAT).strftime("%A, %B %d, %Y")
+            current_name = datetime.strptime(name, FILE_DATE_FORMAT).strftime(DISPLAY_DATE_FORMAT)
         except ValueError:
             current_name = name
         status.config(text=current_name)
@@ -78,7 +79,7 @@ def save_file(text, status, text_file=None):
         current_page = text_file
         name = file_name(text_file)
         try:
-            current_name = datetime.strptime(name, DATE_FORMAT).strftime("%A, %B %d, %Y")
+            current_name = datetime.strptime(name, FILE_DATE_FORMAT).strftime(DISPLAY_DATE_FORMAT)
         except ValueError:
             current_name = name
         status.config(text=f"{current_name} (Saved)")
